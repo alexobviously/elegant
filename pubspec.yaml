@@ -1,6 +1,6 @@
 name: elegant
 description: A collection of utility functions and classes.
-version: 0.0.1
+version: 0.0.2
 repository: https://github.com/alexobviously/elegant
 
 environment:

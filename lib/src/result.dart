@@ -1,3 +1,5 @@
+import 'package:elegant/elegant.dart';
+
 /// An object that can contain either a successful result (of type T), or
 /// an  error (of type E).
 /// Use the `Result.ok` and `Result.error` constructors to create these.
@@ -23,6 +25,12 @@ class Result<T, E> {
   Result<X, E> transform<X>(Result<X, E> Function(T e) transformer) =>
       // ignore: null_check_on_nullable_type_parameter
       ok ? transformer(object!) : Result<X, E>.error(error!);
+
+  /// Returns the object if it is ok, or throws an [UnwrapException] if not.
+  T unwrap() {
+    if (!ok) throw UnwrapException<E>(error);
+    return object!;
+  }
 
   @override
   String toString() {
