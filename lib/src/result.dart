@@ -22,9 +22,17 @@ class Result<T, E> {
   /// Transforms a Result<T, E> into a Result<X, E> through [transformer].
   /// If the Result this is called on has an error, it will be passed on, and
   /// if it is ok then the [transformer] will be applied.
-  Result<X, E> transform<X>(Result<X, E> Function(T e) transformer) =>
+  Result<X, E> transform<X>(Result<X, E> Function(T? e) transformer) =>
       // ignore: null_check_on_nullable_type_parameter
-      ok ? transformer(object!) : Result<X, E>.error(error!);
+      ok ? transformer(object) : Result<X, E>.error(error!);
+
+  /// Transforms a T into an X through [transformer], and returns a Result.ok
+  /// containing the X.
+  /// If the Result this is called on has an error, it will be passed on, and
+  /// if it is ok then the [transformer] will be applied.
+  Result<X, E> transformOk<X>(X Function(T? e) transformer) =>
+      // ignore: null_check_on_nullable_type_parameter
+      ok ? Result.ok(transformer(object)) : Result<X, E>.error(error!);
 
   /// Returns the object if it is ok, or throws an [UnwrapException] if not.
   T unwrap() {
