@@ -1,3 +1,7 @@
+### 0.0.5
+- `groupBy()` function for grouping iterables by an arbitrary condition.
+- `Iterable` extension methods: `groupBy`, `groups`, `pairs`.
+
 ### 0.0.4
 - `Result.transform`'s `transformer` param can now take null values.
 - `Result.transformOk`: like `transform`, but assumes the transformation result is always ok if the input is.

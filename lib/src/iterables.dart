@@ -31,3 +31,26 @@ Iterable<X> groups<T, X>(
     }
   }
 }
+
+Iterable<List<T>> groupBy<T>(
+  Iterable<T> items,
+  bool Function(T prev, T next) condition,
+) sync* {
+  final it = items.iterator;
+  List<T> group = [];
+  while (it.moveNext()) {
+    if (group.isEmpty) {
+      group.add(it.current);
+      continue;
+    }
+    if (condition(group.last, it.current)) {
+      group.add(it.current);
+    } else {
+      yield group;
+      group = [it.current];
+    }
+  }
+  if (group.isNotEmpty) {
+    yield group;
+  }
+}
