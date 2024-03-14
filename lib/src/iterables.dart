@@ -54,3 +54,11 @@ Iterable<List<T>> groupBy<T>(
     yield group;
   }
 }
+
+Iterable<T> circularList<T>(List<T> items, {int step = 1}) sync* {
+  int i = 0;
+  while (true) {
+    yield items[i % items.length];
+    i += step;
+  }
+}

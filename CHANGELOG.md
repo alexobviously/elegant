@@ -1,3 +1,6 @@
+### 0.0.6
+- `circularList()` function for looping over lists infinitely. Also accessible with the `List.circular()` extension function.
+
 ### 0.0.5
 - `groupBy()` function for grouping iterables by an arbitrary condition.
 - `Iterable` extension methods: `groupBy`, `groups`, `pairs`.
