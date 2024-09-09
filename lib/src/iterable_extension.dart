@@ -16,4 +16,17 @@ extension ElegantIterableExtension<T> on Iterable<T> {
 
   Iterable<List<T>> groupBy(bool Function(T prev, T next) condition) =>
       it.groupBy<T>(this, condition);
+
+  T? firstAfter(T value) => skipWhile((e) => e != value).skip(1).firstOrNull;
+
+  int indexOf(T value) {
+    int i = 0;
+    for (final x in this) {
+      if (x == value) {
+        return i;
+      }
+      i++;
+    }
+    return -1;
+  }
 }

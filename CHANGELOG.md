@@ -1,3 +1,6 @@
+### 0.0.7
+- `Iterable.firstAfter` and `Iterable.indexOf`.
+
 ### 0.0.6
 - `circularList()` function for looping over lists infinitely. Also accessible with the `List.circular()` extension function.
 
