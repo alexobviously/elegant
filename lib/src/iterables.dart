@@ -62,3 +62,12 @@ Iterable<T> circularList<T>(List<T> items, {int step = 1}) sync* {
     i += step;
   }
 }
+
+Map<I, List<T>> mapBy<I, T>(Iterable<T> items, I Function(T e) key) {
+  final map = <I, List<T>>{};
+  for (final e in items) {
+    map[key(e)] ??= <T>[];
+    map[key(e)]!.add(e);
+  }
+  return map;
+}

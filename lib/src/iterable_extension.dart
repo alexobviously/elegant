@@ -17,6 +17,8 @@ extension ElegantIterableExtension<T> on Iterable<T> {
   Iterable<List<T>> groupBy(bool Function(T prev, T next) condition) =>
       it.groupBy<T>(this, condition);
 
+  Map<I, List<T>> mapBy<I>(I Function(T e) key) => it.mapBy<I, T>(this, key);
+
   T? firstAfter(T value) => skipWhile((e) => e != value).skip(1).firstOrNull;
 
   int indexOf(T value) {

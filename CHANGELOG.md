@@ -1,3 +1,7 @@
+### 1.0.0
+- Bumped minimum Dart SDK version to 3.10.0, updated dependencies.
+- `mapBy()` function for mapping iterables by a key function. Also accessible with the `Iterable.mapBy` extension function.
+
 ### 0.0.7
 - `Iterable.firstAfter` and `Iterable.indexOf`.
 
