@@ -1,3 +1,6 @@
+### 1.0.1
+- `AggregateStreamController`: aggregates the output of multiple streams of the same type.
+
 ### 1.0.0
 - Bumped minimum Dart SDK version to 3.10.0, updated dependencies.
 - `mapBy()` function for mapping iterables by a key function. Also accessible with the `Iterable.mapBy` extension function.
