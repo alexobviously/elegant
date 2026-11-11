@@ -1,3 +1,8 @@
+### 2.0.1
+- Added lazy `oks` and `errs` views for iterables of `Result`s.
+- Added lazy `values` views for iterables of `Ok`s and `Err`s.
+- Added `sequence()` to collect successful values or return the first error.
+
 ### 2.0.0
 - Bumped minimum Dart SDK version to 3.13.7.
 - Migrated to primary constructors, dot shorthands, etc.

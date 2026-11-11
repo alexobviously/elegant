@@ -23,6 +23,11 @@ final message = switch (parseCount('42')) {
 Results support `map`, `andThen`, `mapError`, `fold`, `unwrap`,
 `unwrapError`, `unwrapOrElse`, and `toNullable`.
 
+Iterables of results expose lazy `oks` and `errs` views. Their payloads are
+available through `results.oks.values` and `results.errs.values`.
+`results.sequence()` collects every successful value or returns the first
+error.
+
 The unnamed `Result` constructor was removed in 2.0. Existing
 `Result.ok(...)` and `Result.error(...)` calls remain supported. The old
 nullable getters and `transform` methods are deprecated in favor of pattern

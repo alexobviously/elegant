@@ -5,3 +5,4 @@ export 'src/iterable_extension.dart';
 export 'src/iterables.dart';
 export 'src/list_extension.dart';
 export 'src/result.dart';
+export 'src/result_iterable_extension.dart';
