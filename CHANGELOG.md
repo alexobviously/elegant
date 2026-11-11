@@ -1,3 +1,6 @@
+### 2.0.2
+- Added value equality and matching hash codes to `Ok` and `Err`.
+
 ### 2.0.1
 - Added lazy `oks` and `errs` views for iterables of `Result`s.
 - Added lazy `values` views for iterables of `Ok`s and `Err`s.

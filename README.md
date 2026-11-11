@@ -22,6 +22,8 @@ final message = switch (parseCount('42')) {
 
 Results support `map`, `andThen`, `mapError`, `fold`, `unwrap`,
 `unwrapError`, `unwrapOrElse`, and `toNullable`.
+`Ok` and `Err` use value equality when their concrete types and payloads are
+equal.
 
 Iterables of results expose lazy `oks` and `errs` views. Their payloads are
 available through `results.oks.values` and `results.errs.values`.

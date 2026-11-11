@@ -226,9 +226,8 @@ void main() {
     });
 
     test('unwrapOrElse computes a fallback for Err', () {
-      final value = const Result<int, _Failure>.error(
-        _Failure('failed'),
-      ).unwrapOrElse((error) => error.message.length);
+      final value = const Result<int, _Failure>.error(_Failure('failed'))
+          .unwrapOrElse((error) => error.message.length);
 
       expect(value, 6);
     });
@@ -282,17 +281,44 @@ void main() {
   });
 
   group('object behavior', () {
-    test('variants use identity equality', () {
-      final firstOk = Result<int, _Failure>.ok(42);
-      final secondOk = Result<int, _Failure>.ok(42);
-      final failure = _Failure('failed');
-      final firstErr = Result<int, _Failure>.error(failure);
-      final secondErr = Result<int, _Failure>.error(failure);
+    test('variants compare by variant and payload', () {
+      final firstOk = Result<int, String>.ok(42);
+      final secondOk = Result<int, String>.ok(42);
+      final firstErr = Result<int, String>.error('failed');
+      final secondErr = Result<int, String>.error('failed');
 
-      expect(firstOk == secondOk, isFalse);
-      expect(firstErr == secondErr, isFalse);
-      expect(firstOk, same(firstOk));
-      expect(firstErr, same(firstErr));
+      expect(firstOk, secondOk);
+      expect(firstErr, secondErr);
+      expect(firstOk.hashCode, secondOk.hashCode);
+      expect(firstErr.hashCode, secondErr.hashCode);
+      expect(firstOk, isNot(Result<int, String>.ok(43)));
+      expect(firstErr, isNot(Result<int, String>.error('different')));
+    });
+
+    test('different variants are not equal', () {
+      const Result<Object, Object> ok = .ok(42);
+      const Result<Object, Object> err = .error(42);
+
+      expect(ok, isNot(err));
+      expect(err, isNot(ok));
+    });
+
+    test('different generic runtime types are symmetrically unequal', () {
+      final narrow = Ok<int, Object>(42);
+      final broad = Ok<num, Object>(42);
+
+      expect(narrow == broad, isFalse);
+      expect(broad == narrow, isFalse);
+    });
+
+    test('nullable payloads use value equality', () {
+      final firstOk = Result<int?, String>.ok(null);
+      final secondOk = Result<int?, String>.ok(null);
+      final firstErr = Result<int, String?>.error(null);
+      final secondErr = Result<int, String?>.error(null);
+
+      expect(firstOk, secondOk);
+      expect(firstErr, secondErr);
     });
 
     test('toString identifies the variant and payload', () {

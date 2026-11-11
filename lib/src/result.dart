@@ -122,6 +122,16 @@ final class const Ok<T, E>(
   E? get error => null;
 
   @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Ok<T, E> &&
+          runtimeType == other.runtimeType &&
+          value == other.value;
+
+  @override
+  int get hashCode => Object.hash(runtimeType, value);
+
+  @override
   String toString() => 'Ok($value)';
 }
 
@@ -130,6 +140,16 @@ final class const Err<T, E>(
   /// The error value.
   @override final E error,
 ) extends Result<T, E> {
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Err<T, E> &&
+          runtimeType == other.runtimeType &&
+          error == other.error;
+
+  @override
+  int get hashCode => Object.hash(runtimeType, error);
+
   @override
   String toString() => 'Err($error)';
 }
