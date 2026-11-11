@@ -1,10 +1,10 @@
 name: elegant
 description: A collection of utility functions and classes.
-version: 1.0.1
+version: 2.0.0
 repository: https://github.com/alexobviously/elegant
 
 environment:
-  sdk: ^3.10.0
+  sdk: ^3.13.7
 
 dev_dependencies:
   lints: ^6.0.0

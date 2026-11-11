@@ -1,48 +1,135 @@
-import 'package:elegant/elegant.dart';
+import 'errors.dart';
 
-/// An object that can contain either a successful result (of type `T`), or
-/// an error (of type `E`).
-/// Use the `Result.ok` and `Result.error` constructors to create these.
-class Result<T, E> {
-  final T? object;
-  final E? error;
+/// The result of a computation that either succeeded with a [T] or failed
+/// with an [E].
+///
+/// Use [Result.ok] and [Result.error] to create results, and pattern matching
+/// to handle [Ok] and [Err] exhaustively.
+sealed class const Result<T, E>() {
+  /// A successful result containing [value].
+  const factory ok(T value) = Ok<T, E>;
 
-  bool get ok => !hasError;
-  bool get hasError => error != null;
-  bool get hasObject => object != null;
+  /// A failed result containing [error].
+  const factory error(E error) = Err<T, E>;
 
-  const Result({this.object, this.error});
+  /// Whether this result is an [Ok].
+  bool get isOk => switch (this) {
+    Ok() => true,
+    Err() => false,
+  };
 
-  /// A successful result.
-  factory Result.ok(T object) => Result(object: object);
+  /// Whether this result is an [Err].
+  bool get isErr => switch (this) {
+    Ok() => false,
+    Err() => true,
+  };
 
-  /// A failed result.
-  factory Result.error(E error) => Result(error: error);
+  /// Transforms the value of an [Ok], preserving an [Err]'s error.
+  Result<U, E> map<U>(U Function(T value) transform) => switch (this) {
+    Ok(:final value) => .ok(transform(value)),
+    Err(:final error) => .error(error),
+  };
 
-  /// Transforms a `Result<T, E>` into a `Result<X, E>` through [transformer].
-  /// If the Result this is called on has an error, it will be passed on, and
-  /// if it is ok then the [transformer] will be applied.
-  Result<X, E> transform<X>(Result<X, E> Function(T? e) transformer) =>
-      // ignore: null_check_on_nullable_type_parameter
-      ok ? transformer(object) : Result<X, E>.error(error!);
+  /// Chains a computation returning another [Result] from an [Ok].
+  ///
+  /// An [Err] bypasses [transform] and preserves its error.
+  Result<U, E> andThen<U>(Result<U, E> Function(T value) transform) =>
+      switch (this) {
+        Ok(:final value) => transform(value),
+        Err(:final error) => .error(error),
+      };
 
-  /// Transforms a `T` into an `X` through [transformer], and returns a `Result.ok`
-  /// containing the `X`.
-  /// If the Result this is called on has an error, it will be passed on, and
-  /// if it is ok then the [transformer] will be applied.
-  Result<X, E> transformOk<X>(X Function(T? e) transformer) =>
-      // ignore: null_check_on_nullable_type_parameter
-      ok ? Result.ok(transformer(object)) : Result<X, E>.error(error!);
+  /// Transforms the error of an [Err], preserving an [Ok]'s value.
+  Result<T, F> mapError<F>(F Function(E error) transform) => switch (this) {
+    Ok(:final value) => .ok(value),
+    Err(:final error) => .error(transform(error)),
+  };
 
-  /// Returns the object if it is `ok`, or throws an [UnwrapException] if not.
-  T unwrap() {
-    if (!ok) throw UnwrapException<E>(error);
-    return object!;
-  }
+  /// Handles both variants and returns a common result type.
+  R fold<R>({
+    required R Function(T value) onOk,
+    required R Function(E error) onError,
+  }) => switch (this) {
+    Ok(:final value) => onOk(value),
+    Err(:final error) => onError(error),
+  };
+
+  /// Returns the value of an [Ok].
+  ///
+  /// Throws an [UnwrapException] containing the error when this is an [Err].
+  T unwrap() => switch (this) {
+    Ok(:final value) => value,
+    Err(:final error) => throw UnwrapException<E>(error),
+  };
+
+  /// Returns the error of an [Err].
+  ///
+  /// Throws an [UnwrapErrorException] containing the value when this is an
+  /// [Ok].
+  E unwrapError() => switch (this) {
+    Ok(:final value) => throw UnwrapErrorException<T>(value),
+    Err(:final error) => error,
+  };
+
+  /// Returns an [Ok]'s value or computes a fallback from an [Err]'s error.
+  T unwrapOrElse(T Function(E error) fallback) => switch (this) {
+    Ok(:final value) => value,
+    Err(:final error) => fallback(error),
+  };
+
+  /// Returns an [Ok]'s value or `null` when this is an [Err].
+  ///
+  /// This intentionally cannot distinguish `Ok(null)` from an [Err].
+  T? toNullable() => switch (this) {
+    Ok(:final value) => value,
+    Err() => null,
+  };
+
+  @Deprecated('Use isOk instead.')
+  bool get ok => isOk;
+
+  @Deprecated('Use isErr instead.')
+  bool get hasError => isErr;
+
+  @Deprecated('Use isOk instead.')
+  bool get hasObject => isOk;
+
+  @Deprecated('Pattern match on Ok and read value instead.')
+  T? get object => switch (this) {
+    Ok(:final value) => value,
+    Err() => null,
+  };
+
+  @Deprecated('Pattern match on Err and read error instead.')
+  E? get error;
+
+  @Deprecated('Use andThen instead.')
+  Result<U, E> transform<U>(Result<U, E> Function(T? value) transformer) =>
+      andThen((value) => transformer(value));
+
+  @Deprecated('Use map instead.')
+  Result<U, E> transformOk<U>(U Function(T? value) transformer) =>
+      map((value) => transformer(value));
+}
+
+/// A successful [Result] containing [value].
+final class const Ok<T, E>(
+  /// The successful value.
+  final T value,
+) extends Result<T, E> {
+  @Deprecated('Pattern match on Err and read error instead.')
+  @override
+  E? get error => null;
 
   @override
-  String toString() {
-    String str = ok ? 'ok, $object' : 'error, $error';
-    return 'Result($str)';
-  }
+  String toString() => 'Ok($value)';
+}
+
+/// A failed [Result] containing [error].
+final class const Err<T, E>(
+  /// The error value.
+  @override final E error,
+) extends Result<T, E> {
+  @override
+  String toString() => 'Err($error)';
 }

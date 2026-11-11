@@ -1,3 +1,14 @@
+### 2.0.0
+- Bumped minimum Dart SDK version to 3.13.7.
+- Migrated to primary constructors, dot shorthands, etc.
+- Redesigned `Result<T, E>` as a sealed `Ok<T, E>`/`Err<T, E>` type.
+- Added exhaustive pattern matching and Rust-inspired result operations.
+- Added `map`, `andThen`, `mapError`, `fold`, `unwrapError`,
+  `unwrapOrElse`, and `toNullable`.
+- Deprecated nullable-field-era getters and transform methods.
+- Removed the public unnamed `Result` constructor.
+- `UnwrapException` now implements `Exception`.
+
 ### 1.0.1
 - `AggregateStreamController`: aggregates the output of multiple streams of the same type.
 
